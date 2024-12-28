@@ -11,5 +11,4 @@ public class TimeLiner {
         SpringApplication.run(TimeLiner.class, args);
     }
 
-
 }
