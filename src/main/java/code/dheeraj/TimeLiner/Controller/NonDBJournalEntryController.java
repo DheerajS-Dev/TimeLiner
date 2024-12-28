@@ -1,6 +1,7 @@
 package code.dheeraj.TimeLiner.Controller;
 
 import code.dheeraj.TimeLiner.Entity.JournalEntry;
+import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/_journal")
 public class NonDBJournalEntryController {
 
-    private final Map<Long, JournalEntry> journalEntries = new HashMap<>();
+    private final Map<ObjectId, JournalEntry> journalEntries = new HashMap<>();
 
     @GetMapping
     public List<JournalEntry> getAll() {
@@ -25,9 +26,9 @@ public class NonDBJournalEntryController {
     }
 
     @GetMapping("/id/{id}")
-    public JournalEntry getEntryById(@PathVariable Long id) {
+    public JournalEntry getEntryById(@PathVariable ObjectId id) {
         JournalEntry data = journalEntries.get(id);
-        if(data != null)
+        if (data != null)
             return data;
         else
             System.out.println("Invalid ID.");
@@ -35,7 +36,7 @@ public class NonDBJournalEntryController {
     }
 
     @PutMapping("/id/{id}")
-    public JournalEntry updateEntry(@PathVariable Long id, @RequestBody JournalEntry entry) {
+    public JournalEntry updateEntry(@PathVariable ObjectId id, @RequestBody JournalEntry entry) {
         JournalEntry data = journalEntries.get(id);
         if (data != null)
             return journalEntries.put(id, entry);
@@ -45,7 +46,7 @@ public class NonDBJournalEntryController {
     }
 
     @DeleteMapping("/id/{id}")
-    public JournalEntry deleteEntry(@PathVariable Long id) {
+    public JournalEntry deleteEntry(@PathVariable ObjectId id) {
         JournalEntry data = journalEntries.get(id);
         if (data != null)
             return journalEntries.remove(id);
