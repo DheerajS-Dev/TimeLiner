@@ -35,6 +35,7 @@ public class JournalEntryService {
             old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : old.getTitle());
             old.setContent(newEntry.getContent() != null && !newEntry.getContent().isEmpty() ? newEntry.getContent() : old.getContent());
         }
+        assert old != null;
         journalEntryRepository.save(old);
         return old;
     }
