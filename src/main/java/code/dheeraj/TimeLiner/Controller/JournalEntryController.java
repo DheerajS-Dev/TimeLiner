@@ -25,9 +25,9 @@ public class JournalEntryController {
     //API to access Journal Entries with a User Association
 
     @PostMapping("/createEntry/{userName}")
-    public ResponseEntity<?> createEntry(@PathVariable String userName, @RequestBody JournalEntry entry) {
+    public ResponseEntity<?> createEntryForUser(@PathVariable String userName, @RequestBody JournalEntry entry) {
         try {
-            return new ResponseEntity<>(journalEntryService.createEntry(userName, entry), HttpStatus.CREATED);
+            return new ResponseEntity<>(journalEntryService.createEntryForUser(userName, entry), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -48,20 +48,23 @@ public class JournalEntryController {
     }
 
     @DeleteMapping("/deleteUserEntry/{userName}/{id}")
-    public ResponseEntity<?> deleteEntry(@PathVariable String userName, @PathVariable ObjectId id) {
+    public ResponseEntity<?> deleteEntryForUser(@PathVariable String userName, @PathVariable ObjectId id) {
         try {
-            return new ResponseEntity<>(journalEntryService.deleteEntryByUserName(userName, id), HttpStatus.OK);
+            return new ResponseEntity<>(journalEntryService.deleteEntryForUserName(userName, id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping("/{userName}/{id}")
-    public ResponseEntity<JournalEntry> updateEntry(@PathVariable String userName, @PathVariable ObjectId id, @RequestBody JournalEntry entry) {
+    @PutMapping("/updateUserEntry/{userName}/{id}")
+    public ResponseEntity<JournalEntry> updateEntryForUser(@PathVariable String userName, @PathVariable ObjectId id, @RequestBody JournalEntry entry) {
         try {
-            return new ResponseEntity<>(journalEntryService.updateEntryById(id, entry), HttpStatus.OK);
+            User user = userService.findByUserName(userName);
+            if (user != null) {
+                return new ResponseEntity<>(journalEntryService.updateEntryForUser(id, entry), HttpStatus.OK);
+            } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

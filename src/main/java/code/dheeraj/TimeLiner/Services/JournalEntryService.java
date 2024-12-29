@@ -22,7 +22,7 @@ public class JournalEntryService {
 
     //Services to access Journal Entries when there is some kind of user
 
-    public JournalEntry createEntry(String userName, JournalEntry entry) {
+    public JournalEntry createEntryForUser(String userName, JournalEntry entry) {
         try {
             User user = userService.findByUserName(userName);
             entry.setDate(LocalDate.now());
@@ -35,7 +35,7 @@ public class JournalEntryService {
         return entry;
     }
 
-    public Boolean deleteEntryByUserName(String userName, ObjectId id) {
+    public Boolean deleteEntryForUserName(String userName, ObjectId id) {
         try {
             User user = userService.findByUserName(userName);
             user.getJournalEntries().removeIf(x -> x.getId().equals(id));
@@ -45,6 +45,21 @@ public class JournalEntryService {
             throw new NullPointerException("User Not Found");
         }
         return true;
+    }
+
+    public JournalEntry updateEntryForUser(ObjectId id, JournalEntry newEntry) {
+        try {
+            JournalEntry old = journalEntryRepository.findById(id).orElse(null);
+            if(old != null) {
+                old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : old.getTitle());
+                old.setContent(newEntry.getContent() != null && !newEntry.getContent().isEmpty() ? newEntry.getContent() : old.getContent());
+            }
+            assert old != null;
+            journalEntryRepository.save(old);
+            return old;
+        } catch (Exception e) {
+            throw new NullPointerException("Journal Not Found");
+        }
     }
 
 
