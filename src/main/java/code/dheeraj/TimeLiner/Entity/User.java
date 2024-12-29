@@ -1,7 +1,8 @@
 package code.dheeraj.TimeLiner.Entity;
 
-import com.sun.istack.internal.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "users")
 public class User {
 
@@ -23,9 +26,9 @@ public class User {
     @NonNull
     private String userName;
 
-    @NotNull
+    @NonNull
     private String password;
 
     @DBRef
-    private List<JournalEntry> journalList = new ArrayList<>();
+    private List<JournalEntry> journalEntries = new ArrayList<>();
 }

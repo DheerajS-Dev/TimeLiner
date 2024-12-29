@@ -1,6 +1,7 @@
 package code.dheeraj.TimeLiner.Services;
 
 import code.dheeraj.TimeLiner.Entity.JournalEntry;
+import code.dheeraj.TimeLiner.Entity.User;
 import code.dheeraj.TimeLiner.Repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,47 @@ public class JournalEntryService {
     @Autowired
     private JournalEntryRepository journalEntryRepository;
 
+    @Autowired
+    private UserService userService;
+
+    //Services to access Journal Entries when there is some kind of user
+
+    public JournalEntry createEntry(String userName, JournalEntry entry) {
+        try {
+            User user = userService.findByUserName(userName);
+            entry.setDate(LocalDate.now());
+            JournalEntry saved = journalEntryRepository.save(entry);
+            user.getJournalEntries().add(saved);
+            userService.addUser(user);
+        } catch (Exception e) {
+            throw new NullPointerException();
+        }
+        return entry;
+    }
+
+    public Boolean deleteEntryByUserName(String userName, ObjectId id) {
+        try {
+            User user = userService.findByUserName(userName);
+            user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+            userService.addUser(user);
+            journalEntryRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new NullPointerException("User Not Found");
+        }
+        return true;
+    }
+
+
+    //Services to access Journal Entries directly without any user Access
+
     public JournalEntry createEntry(JournalEntry entry) {
-        entry.setDate(LocalDate.now());
-        return journalEntryRepository.save(entry);
+        try {
+            entry.setDate(LocalDate.now());
+            JournalEntry saved = journalEntryRepository.save(entry);
+        } catch (Exception e) {
+            throw new NullPointerException();
+        }
+        return entry;
     }
 
     public List<JournalEntry> findAllEntries() {
