@@ -25,7 +25,7 @@ public class JournalEntryService {
 
     //Services to access Journal Entries when there is some kind of user
 
-    @Transactional
+//    @Transactional //(Commented as not compatible with Mongo Client)
     public JournalEntry createEntryForUser(String userName, JournalEntry entry) {
         try {
             User user = userService.findByUserName(userName);
@@ -35,7 +35,7 @@ public class JournalEntryService {
 //            user.setUserName(null); // To check Transactional Features
             userService.addUser(user);
         } catch (Exception e) {
-            throw new RuntimeException("User Not Found.");
+            throw new RuntimeException();
         }
         return entry;
     }
@@ -47,7 +47,7 @@ public class JournalEntryService {
             userService.addUser(user);
             journalEntryRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("User Not Found");
+            throw new RuntimeException();
         }
         return true;
     }
