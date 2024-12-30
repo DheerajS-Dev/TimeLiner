@@ -3,14 +3,17 @@ package code.dheeraj.TimeLiner.Services;
 import code.dheeraj.TimeLiner.Entity.JournalEntry;
 import code.dheeraj.TimeLiner.Entity.User;
 import code.dheeraj.TimeLiner.Repository.JournalEntryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class JournalEntryService {
 
@@ -22,15 +25,17 @@ public class JournalEntryService {
 
     //Services to access Journal Entries when there is some kind of user
 
+    @Transactional
     public JournalEntry createEntryForUser(String userName, JournalEntry entry) {
         try {
             User user = userService.findByUserName(userName);
             entry.setDate(LocalDate.now());
             JournalEntry saved = journalEntryRepository.save(entry);
             user.getJournalEntries().add(saved);
+//            user.setUserName(null); // To check Transactional Features
             userService.addUser(user);
         } catch (Exception e) {
-            throw new NullPointerException();
+            throw new RuntimeException("User Not Found.");
         }
         return entry;
     }
@@ -42,7 +47,7 @@ public class JournalEntryService {
             userService.addUser(user);
             journalEntryRepository.deleteById(id);
         } catch (Exception e) {
-            throw new NullPointerException("User Not Found");
+            throw new RuntimeException("User Not Found");
         }
         return true;
     }
@@ -58,7 +63,7 @@ public class JournalEntryService {
             journalEntryRepository.save(old);
             return old;
         } catch (Exception e) {
-            throw new NullPointerException("Journal Not Found");
+            throw new RuntimeException("Journal Not Found");
         }
     }
 
