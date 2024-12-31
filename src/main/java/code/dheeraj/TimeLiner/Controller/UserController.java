@@ -40,23 +40,4 @@ public class UserController {
         String name = authentication.getName();
         return new ResponseEntity<>(userService.deleteUserByUserName(name), HttpStatus.OK);
     }
-
-    //Optional Endpoint(Only for Admin As User doesn't need it due to security purpose)
-    @GetMapping("/getAllUser")
-    public ResponseEntity<List<User>> getAll() {
-        try {
-            return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/{userName}")
-    public ResponseEntity<User> getUserByUserName(@PathVariable String userName) {
-        try {
-            return new ResponseEntity<>(userService.findByUserName(userName), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }

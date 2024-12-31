@@ -47,7 +47,7 @@ public class JournalEntryService {
             userService.addUser(user);
             journalEntryRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException("An error occurred while deleting the user");
         }
         return true;
     }

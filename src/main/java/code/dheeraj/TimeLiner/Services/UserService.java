@@ -1,19 +1,12 @@
 package code.dheeraj.TimeLiner.Services;
 
-import code.dheeraj.TimeLiner.Entity.JournalEntry;
 import code.dheeraj.TimeLiner.Entity.User;
-import code.dheeraj.TimeLiner.Repository.JournalEntryRepository;
 import code.dheeraj.TimeLiner.Repository.UserRepository;
-import lombok.NonNull;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -30,8 +23,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User addUser(User user) {
-        return userRepository.save(user);
+    public User createAdmin(User adminUser) {
+        User user = userRepository.findByUserName(adminUser.getUserName());
+        if(user != null) {
+            user.getRoles().add("ADMIN");
+            userRepository.save(user);
+            return user;
+        }else {
+            adminUser.setPassword(passwordEncoder.encode(adminUser.getPassword()));
+            adminUser.setRoles(Arrays.asList("ADMIN", "USER"));
+            userRepository.save(adminUser);
+        }
+        return adminUser;
+    }
+
+    public void addUser(User user) {
+        userRepository.save(user);
     }
 
     public User updateUserDetail(User oldUser, User newUser) {
@@ -44,10 +51,11 @@ public class UserService {
         return userRepository.deleteByUserName(userName);
     }
 
-    //Optional Endpoint(Only for Admin As User doesn't need it due to security purpose)
-
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        if(!users.isEmpty())
+            return users;
+        else throw new RuntimeException();
     }
 
     public User findByUserName(String userName) {
