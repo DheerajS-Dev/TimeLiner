@@ -17,19 +17,24 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList("USER"));
-        return userRepository.save(user);
+    public boolean createUser(User user) {
+        try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Collections.singletonList("USER"));
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public User createAdmin(User adminUser) {
         User user = userRepository.findByUserName(adminUser.getUserName());
-        if(user != null) {
+        if (user != null) {
             user.getRoles().add("ADMIN");
             userRepository.save(user);
             return user;
-        }else {
+        } else {
             adminUser.setPassword(passwordEncoder.encode(adminUser.getPassword()));
             adminUser.setRoles(Arrays.asList("ADMIN", "USER"));
             userRepository.save(adminUser);
@@ -53,7 +58,7 @@ public class UserService {
 
     public List<User> getAllUser() {
         List<User> users = userRepository.findAll();
-        if(!users.isEmpty())
+        if (!users.isEmpty())
             return users;
         else throw new RuntimeException();
     }

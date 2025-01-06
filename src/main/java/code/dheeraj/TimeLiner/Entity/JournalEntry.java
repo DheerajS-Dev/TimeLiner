@@ -23,4 +23,5 @@ public class JournalEntry {
     private String content;
 
     private LocalDate date;
+
 }

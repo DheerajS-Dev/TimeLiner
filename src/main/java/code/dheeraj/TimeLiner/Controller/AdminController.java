@@ -2,7 +2,6 @@ package code.dheeraj.TimeLiner.Controller;
 
 import code.dheeraj.TimeLiner.Entity.JournalEntry;
 import code.dheeraj.TimeLiner.Entity.User;
-import code.dheeraj.TimeLiner.Repository.UserRepository;
 import code.dheeraj.TimeLiner.Services.JournalEntryService;
 import code.dheeraj.TimeLiner.Services.UserService;
 import org.bson.types.ObjectId;

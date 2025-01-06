@@ -25,7 +25,7 @@ public class JournalEntryService {
 
     //Services to access Journal Entries when there is some kind of user
 
-//    @Transactional //(Commented as not compatible with Mongo Client)
+    //    @Transactional //(Commented as not compatible with Mongo Client)
     public JournalEntry createEntryForUser(String userName, JournalEntry entry) {
         try {
             User user = userService.findByUserName(userName);
@@ -55,7 +55,7 @@ public class JournalEntryService {
     public JournalEntry updateEntryForUser(ObjectId id, JournalEntry newEntry) {
         try {
             JournalEntry old = journalEntryRepository.findById(id).orElse(null);
-            if(old != null) {
+            if (old != null) {
                 old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : old.getTitle());
                 old.setContent(newEntry.getContent() != null && !newEntry.getContent().isEmpty() ? newEntry.getContent() : old.getContent());
             }
@@ -90,7 +90,7 @@ public class JournalEntryService {
 
     public JournalEntry updateEntryById(ObjectId id, JournalEntry newEntry) {
         JournalEntry old = journalEntryRepository.findById(id).orElse(null);
-        if(old != null) {
+        if (old != null) {
             old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : old.getTitle());
             old.setContent(newEntry.getContent() != null && !newEntry.getContent().isEmpty() ? newEntry.getContent() : old.getContent());
         }
@@ -101,10 +101,10 @@ public class JournalEntryService {
 
     public Boolean deleteEntryById(ObjectId id) {
         Optional<JournalEntry> optional = journalEntryRepository.findById(id);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             journalEntryRepository.deleteById(id);
             return true;
-        }else
+        } else
             return false;
     }
 }
